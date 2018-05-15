@@ -1,0 +1,26 @@
+<% include partials/top %>
+
+
+Hello <%= user.profile.name %>
+
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <img class="rounded-circle img-responsive img-center" src="<%= user.profile.picture %>"></img>
+        <br>
+        <p>Name:<%= user.profile.name %></p>
+        <p>Email:<%=user.email %></p>
+        <% if(typeof user.address=='undefined'){ %>
+            <p>Address:  no address provided</p>
+        <%}else{%>
+        <p>Address: <%=user.address %></p>
+        <%}%>
+    </div>
+   
+</div>
+ <a href="/user/edit-profile" class="btn btn-primary btn-lg"> edit</a>
+
+
+
+
+
+<% include partials/bottom %>

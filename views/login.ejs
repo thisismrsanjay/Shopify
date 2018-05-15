@@ -1,0 +1,33 @@
+<% include partials/top %>
+
+
+<% if(loginMessage.length >0){%>
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <%= loginMessage %>
+    </div>
+    <%}%>
+
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h2 class="card-title text-center">Login</h2>
+        <form action="/user/login" method="POST">
+            <div class="form-group mt-2">
+                <label for="">Email</label>
+                <input name='email'  type="text" class="form-control" required>
+            </div>
+            <div>
+                <label for="">Password</label>
+                <input name='password'  type="password" class="form-control" required>
+            </div>
+            <input type="submit" value='Submit' class="btn mt-2 btn-success">
+        </form>
+    </div>
+</div>
+
+
+
+<% include partials/bottom %>
