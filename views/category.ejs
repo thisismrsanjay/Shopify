@@ -1,0 +1,30 @@
+<% include partials/top %>
+    
+
+<div class="row ">
+    <% for(var i=0;i<products.length;i++){ %>
+        <div class="col-md-4 ">
+            <a href="/product/<%= products[i]._id %>">
+                <div class="img-thumbnail">
+                    <img class="img-thumbnail" src="<%=products[i].image %>" alt="">
+                </div>
+                <div class="figure-caption">
+                    <h3><%= products[i].name %></h3>
+                    <p><%= products[i].category.name %></p>
+                    <p><%= products[i].price %></p>
+                </div>
+
+
+            </a>
+        </div>
+    <% }%>
+    
+</div>
+
+
+
+
+
+
+
+<% include partials/bottom %>

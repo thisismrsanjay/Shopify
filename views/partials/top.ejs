@@ -11,9 +11,9 @@
 </head>
 
 <body>
-   
 
-   
+
+
     <nav class="navbar navbar-expand-lg   navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -38,26 +38,33 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <% for(var i=0;i<categories.length ;i++){ %>
-                            <a class="dropdown-item" href="#"><%= categories[i].name %></a>
-                        <% } %>
-            
+                            <a class="dropdown-item" href="/products/<%= categories[i]._id %>">
+                                <%= categories[i].name %>
+                            </a>
+                            <% } %>
+
                     </div>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                
                 <% if(user) { %>
-                 <li class="nav-item"><a class="nav-link" href="/user/logout">Logout</a></li>
-                 <li class="nav-item"><a class="nav-link" href="/user/profile">Profile</a></li>
-                 <%}else{%>
-                 
-                     <li class="nav-item">
-                         <a class="nav-link" href="/user/login">Login</a>
-                       </li>
-                       <li class="nav-item">
-                         <a class="nav-link" href="/user/signup">Register</a>
-                       </li>
-                   <%}%>
-             </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/logout">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/profile">Profile</a>
+                    </li>
+                    <%}else{%>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/signup">Register</a>
+                        </li>
+                        <%}%>
+            </ul>
         </div>
     </nav>
     <div class="container">

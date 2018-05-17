@@ -6,14 +6,14 @@ const bodyParser = require('body-parser');
 const userRoutes= require('./routes/users');
 const mainRoutes =require('./routes/main');
 const adminRoutes = require('./routes/admin');
+const apiRoutes =require('./api/api');
 const flash = require('connect-flash');
 const session =require('express-session');
 const config = require('./config/config');
 const passport = require('passport');
 const passportConfig = require('./config/passport')(app,passport);
 const Category = require('./models/category');
-
-
+const mongodb = require('mongodb');
 
 app.use(session({
     secret: config.secret,
@@ -53,7 +53,7 @@ app.use((req,res,next)=>{
 app.use('/user',userRoutes);
 app.use('/',mainRoutes);
 app.use('/',adminRoutes);
-
+app.use('/api',apiRoutes);
 
 
 
