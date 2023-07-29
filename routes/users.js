@@ -16,13 +16,17 @@ router.get('/login', (req, res) => {
     });
 })
 
-router.get('/profile', (req, res) => {
-    User.findOne({ _id: req.user._id }, (err, user) => {
-        if (err) throw err;
+router.get('/profile', async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.user._id });
         res.render('profile', { user: user });
-    })
+    } catch (err) {
+        // Handle error here - for example, log it and send a response to the user
+        console.error(err);
+        res.status(500).send("An error occurred");
+    }
+});
 
-})
 
 router.post('/login', passport.authenticate('local-login', {
     successRedirect: '/',
@@ -30,7 +34,7 @@ router.post('/login', passport.authenticate('local-login', {
     failureFlash: true
 }))
 
-router.post('/signup', (req, res, next) => {
+router.post('/signup', async (req, res, next) => {
     var user = new User();
 
     user.profile.name = req.body.name;
@@ -38,36 +42,29 @@ router.post('/signup', (req, res, next) => {
     user.password = req.body.password;
     user.profile.picture = user.gravatar();
 
+    try {
+        let existingUser = await User.findOne({ email: req.body.email });
 
-    User.find({ email: req.body.email }, (err, data) => {
-        if (err) throw err;
-        else {
-            if (data.length >= 1) {
-                req.flash('errors', 'Account with email exists login first');
-                return res.redirect('./signup');
-            } else {
-                bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    if (err) {
-                        res.status(500).json({ error: err, message: 'hashing failed' });
-                    } else {
-                        //cool
-                        user.password=hash;
+        if (existingUser) {
+            req.flash('errors', 'Account with email exists login first');
+            return res.redirect('./signup');
+        } else {
+            try {
+                let hash = await bcrypt.hash(req.body.password, 10);
+                user.password = hash;
 
-                        user.save((err, data) => {
-                            if (err) {
-                                res.status(500).json(err);
-                            } else {
-                                req.logIn(user, (err) => {
-                                    if (err) throw err;
-                                    res.redirect('/user/profile');
-                                })
-                            }
-                        })
-                    }
-                })
+                let savedUser = await user.save();
+                req.logIn(savedUser, (err) => {
+                    if (err) throw err;
+                    res.redirect('/user/profile');
+                });
+            } catch (err) {
+                res.status(500).json({ error: err, message: 'Hashing or saving failed' });
             }
         }
-    })
+    } catch (err) {
+        res.status(500).json({ error: err, message: 'User finding failed' });
+    }
 })
 
 router.get('/logout', function (req, res) {
@@ -79,18 +76,25 @@ router.get('/logout', function (req, res) {
 router.get('/edit-profile',(req,res)=>{
     res.render('edit-profile');
 })
-router.post('/edit-profile',(req,res)=>{
-    User.findOne({_id:req.user._id},(err,user)=>{
-        if(err)throw err;
-        if(req.body.name)user.profile.name = req.body.name;
+router.post('/edit-profile', async (req, res) => {
+    try {
+        let user = await User.findOne({_id: req.user._id});
+
+        if(req.body.name) user.profile.name = req.body.name;
         if(req.body.address) user.address =req.body.address;
-        user.save((err)=>{
-            if(err)throw err;
-            req.flash('success','Successfully edited');
+        
+        try {
+            await user.save();
+            req.flash('success', 'Successfully edited');
             return res.redirect('/user/profile');
-        })
-    })
+        } catch (err) {
+            throw err; // Or handle error as you see fit
+        }
+    } catch (err) {
+        throw err; // Or handle error as you see fit
+    }
 })
+
 
 
 

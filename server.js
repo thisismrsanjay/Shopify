@@ -41,13 +41,15 @@ app.use('*',function(req,res,next){
     next();
 })
 
-app.use((req,res,next)=>{
-    Category.find({},(err,categories)=>{
-        if(err) return next(err);
-        res.locals.categories = categories;
-        next();
-    })
-})
+app.use((req, res, next) => {
+    Category.find({})
+        .then(categories => {
+            res.locals.categories = categories;
+            next();
+        })
+        .catch(err => next(err));
+});
+
 
 
 app.use('/user',userRoutes);

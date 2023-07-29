@@ -3,23 +3,23 @@ const faker = require('faker');
 const Category = require('../models/category');
 const Product = require('../models/products');
 
-router.get('/:name',(req,res,next)=>{
+router.get('/:name', async (req, res, next) => {
+    try {
+        const category = await Category.findOne({ name: req.params.name });
 
-    Category.findOne({name:req.params.name},(err,category)=>{
-        if (err) return next(err);
-        for(let i =0 ;i<30;i++){
+        for(let i = 0 ; i < 30 ; i++) {
             let product = new Product();
             product.category = category._id;
-            product.name= faker.commerce.productName();
+            product.name = faker.commerce.productName();
             product.price = faker.commerce.price();
-            product.image= faker.image.image();
+            product.image = faker.image.image();
 
-            product.save((err)=>{
-                if(err)return next(err);
-            })
-        }res.redirect('/add-category');
-    })
-
-
+            await product.save();
+        }
+        res.redirect('/add-category');
+    } catch(err) {
+        next(err);
+    }
 });
-module.exports= router;
+
+module.exports = router;
